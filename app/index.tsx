@@ -9,6 +9,7 @@ import JogadorAutomatizado from "@/jogo/JogadorAutomatizado";
 import { Peca } from "@/jogo/Peca";
 import Partida from "@/jogo/Partida";
 import { SituacaoPartida } from "@/jogo/SituacaoPartida";
+import AvaliadorJogo from "@/jogo/AvaliadorJogo";
 
 export default function Index(): JSX.Element {
 
@@ -23,7 +24,7 @@ export default function Index(): JSX.Element {
   const [vitoriasJogador1, setVitoriasJogador1] = useState<number>(partidaRef.current.getJogador1().getVitorias());
   const [vitoriasJogador2, setVitoriasJogador2] = useState<number>(partidaRef.current.getJogador2().getVitorias());
   const [partidas, setPartidas] = useState<number>(jogoRef.current.getNumeroPartidas());
-  const [tabuleiro, setTabuleiro] = useState<(Peca | undefined)[][]>(partidaRef.current.getTabuleiro());  
+  const [tabuleiro, setTabuleiro] = useState<(Peca | null)[][]>(partidaRef.current.getTabuleiro());  
   const [vezJogador1, setVezJogador1] = useState<boolean>(partidaRef.current.getVezJogador1());  
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function Index(): JSX.Element {
         } else {
           
           // Verifica se a partida terminou
-          if (partidaRef.current.verificaFim() != SituacaoPartida.EmAndamento) {
+          if (AvaliadorJogo.verificaFim(tabuleiro) != SituacaoPartida.EmAndamento) {
           
             finalizaPartida();
           }  else {
@@ -58,7 +59,7 @@ export default function Index(): JSX.Element {
   function finalizaPartida(){
     
     // Incrementa contadores e informa usuário do resultado da partida
-    let situacao: SituacaoPartida = partidaRef.current.verificaFim();
+    let situacao: SituacaoPartida = AvaliadorJogo.verificaFim(tabuleiro);
     if (situacao == SituacaoPartida.VitoriaJogador1) {
         partidaRef.current.getJogador1().adicionaVitoria();
         Alert.alert(`${partidaRef.current.getJogador1().getNome()} venceu!`);
@@ -89,7 +90,7 @@ export default function Index(): JSX.Element {
     } else {
       
       // Verifica se a partida terminou
-      if (partidaRef.current.verificaFim() != SituacaoPartida.EmAndamento) {      
+      if (AvaliadorJogo.verificaFim(tabuleiro) != SituacaoPartida.EmAndamento) {      
         
         finalizaPartida();
       } else {

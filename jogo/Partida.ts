@@ -7,13 +7,13 @@ export default class Partida {
 
     private jogador1: Jogador;
     private jogador2: Jogador;
-    private tabuleiro: (Peca | undefined)[][];
+    private tabuleiro: (Peca | null)[][];
     private vezJogador1: boolean;
 
     constructor(jogador1: Jogador, jogador2: Jogador) {
         this.jogador1 = jogador1;
         this.jogador2 = jogador2;
-        this.tabuleiro = [[undefined, undefined, undefined], [undefined, undefined, undefined], [undefined, undefined, undefined]];
+        this.tabuleiro = [[null, null, null], [null, null, null], [null, null, null]];
         this.vezJogador1 = true;
     }
 
@@ -25,7 +25,7 @@ export default class Partida {
         return this.jogador2;
     }
 
-    public getTabuleiro(): (Peca | undefined)[][] {
+    public getTabuleiro(): (Peca | null)[][] {
         return this.tabuleiro;
     }
 
@@ -34,7 +34,7 @@ export default class Partida {
     }
 
     public joga(linha: number, coluna: number): boolean {
-        if (this.tabuleiro[linha][coluna] == undefined) {
+        if (this.tabuleiro[linha][coluna] == null) {
             if (this.vezJogador1) {
                 this.tabuleiro[linha][coluna] = Peca.Xis;
             } else {
@@ -48,78 +48,4 @@ export default class Partida {
         }
     }
 
-    private extraiLinha(i: number) {
-        return this.tabuleiro[i];
-    }
-
-    private extraiColuna(i: number) {
-        return [this.tabuleiro[0][i], this.tabuleiro[1][i], this.tabuleiro[2][i]]
-    }
-
-    private extraiDiagonalPrincipal() {
-        return [this.tabuleiro[0][0], this.tabuleiro[1][1], this.tabuleiro[2][2]];
-    }
-
-    private extraiDiagonalSecundaria() {
-        return [this.tabuleiro[0][2], this.tabuleiro[1][1], this.tabuleiro[2][0]];
-    }
-
-    private verificaVencedor(trinca: (Peca | undefined)[]): SituacaoPartida | undefined {
-        if (trinca.filter( e => e == trinca[0] ).length == 3) {
-            if (trinca[0] == Peca.Xis) {
-                return SituacaoPartida.VitoriaJogador1;
-            } else if (trinca[0] == Peca.Circulo) {
-                return SituacaoPartida.VitoriaJogador2;
-            } else {
-                return undefined
-            }
-        } else {
-            return undefined;
-        }
-    }
-
-    private verificaEmpate(): SituacaoPartida | undefined {
-        const pecas = [ ...this.tabuleiro[0], ...this.tabuleiro[1], ...this.tabuleiro[2] ];
-        if (pecas.filter( e => e != undefined ).length == 9) {
-            return SituacaoPartida.Empate;
-        } else {
-            return undefined;
-        }
-    }
-
-    public verificaFim(): SituacaoPartida {
-
-        let situacao: SituacaoPartida | undefined = undefined;
-
-        for (let i = 0; i < 3; i++) {
-            situacao = this.verificaVencedor(this.extraiLinha(i));
-            if (situacao != undefined) {
-                return situacao;
-            }
-        }
-
-        for (let i = 0; i < 3; i++) {
-            situacao = this.verificaVencedor(this.extraiColuna(i));
-            if (situacao != undefined) {
-                return situacao;
-            }
-        }
-        
-        situacao = this.verificaVencedor(this.extraiDiagonalPrincipal());
-        if (situacao != undefined) {
-            return situacao;
-        }
-
-        situacao = this.verificaVencedor(this.extraiDiagonalSecundaria());
-        if (situacao != undefined) {
-            return situacao;
-        }
-
-        situacao = this.verificaEmpate();
-        if (situacao != undefined) {
-            return situacao;
-        }
-        
-        return SituacaoPartida.EmAndamento;
-    }
 }

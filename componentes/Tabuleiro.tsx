@@ -4,7 +4,7 @@ import { Peca } from "@/jogo/Peca";
 
 interface IProps {
   lado: number;
-  tabuleiro: (Peca | undefined)[][];
+  tabuleiro: (Peca | null)[][];
   jogadaHumano: (linha: number, coluna: number) => void;
   vezJogador1: boolean;
 }

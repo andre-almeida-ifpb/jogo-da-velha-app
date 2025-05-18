@@ -3,7 +3,7 @@ import { Image, TouchableOpacity, View } from "react-native";
 
 interface IProps {
     lado: number;
-    tabuleiro: (Peca | undefined)[][];
+    tabuleiro: (Peca | null)[][];
     jogadaHumano: (linha: number, coluna: number) => void;
     linha: number;
     coluna: number;   
